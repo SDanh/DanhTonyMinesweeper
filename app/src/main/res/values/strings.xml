@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">DanhTonyMinesweeper</string>
+    <string name="title_activity_main">MainActivity</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <!--login -->
+    <string name="userid_hint">Enter your UserID</string>
+    <string name="pwd_hint">Enter you Password</string>
+    <string name="login_text">Sign In</string>
+    <string name="sign_up_text">Register</string>
+
+    <!--login preferences-->
+    <string name="LOGIN_PREFS">edu.tacoma.uw.webserviceslab.PREFS</string>
+    <string name="LOGGEDIN">loggedin</string>
+
+    <string name="action_logout">Log Out</string>
+
+    <string name="leaderboard_text">Leaderboard</string>
+</resources>
