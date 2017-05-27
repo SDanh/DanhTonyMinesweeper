@@ -5,12 +5,16 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import java.net.URLEncoder;
+import java.util.regex.Pattern;
 
 import danhs.uw.tacoma.edu.danhtonyminesweeper.R;
 
@@ -45,38 +49,12 @@ public class LoginFragment extends Fragment {
             public void onClick(View v) {
                 String userId = userIdText.getText().toString();
                 String pwd = pwdText.getText().toString();
-                if (TextUtils.isEmpty(userId)) {
-                    Toast.makeText(v.getContext(), "Enter userid"
-                            , Toast.LENGTH_SHORT)
-                            .show();
-                    userIdText.requestFocus();
-                    return;
-                }
-                if (!userId.contains("@")) {
-                    Toast.makeText(v.getContext(), "Enter a valid email address"
-                            , Toast.LENGTH_SHORT)
-                            .show();
-                    userIdText.requestFocus();
-                    return;
-                }
 
-                if (TextUtils.isEmpty(pwd)) {
-                    Toast.makeText(v.getContext(), "Enter password"
-                            , Toast.LENGTH_SHORT)
-                            .show();
-                    pwdText.requestFocus();
-                    return;
-                }
-                if (pwd.length() < 6) {
-                    Toast.makeText(v.getContext()
-                            , "Enter password of at least 6 characters"
-                            , Toast.LENGTH_SHORT)
-                            .show();
-                    pwdText.requestFocus();
-                    return;
-                }
+                boolean isValid = validateEmailAndPassword(userIdText, pwdText, v);
 
-                ((SignInActivity) getActivity()).login(userId, pwd);
+                if(isValid) {
+                    ((SignInActivity) getActivity()).login(userId, pwd);
+                }
             }
         });
 
@@ -85,14 +63,105 @@ public class LoginFragment extends Fragment {
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(v.getContext(), "SIGNED UP"
-                        , Toast.LENGTH_LONG)
-                        .show();
-                ((SignInActivity) getActivity()).login("TEMP", "TEMP");
+                String userId = userIdText.getText().toString();
+                String pwd = pwdText.getText().toString();
+
+                boolean isValid = validateEmailAndPassword(userIdText, pwdText, v);
+
+                if(isValid) {
+                    ((SignInActivity) getActivity()).register(userId, pwd);
+                }
+
+                //Toast.makeText(v.getContext(), "SIGNED UP"
+                //        , Toast.LENGTH_LONG)
+                //        .show();
+                //((SignInActivity) getActivity()).login("TEMP", "TEMP");
             }
         });
         return v;
     }
+
+    private boolean validateEmailAndPassword(EditText emailEditText, EditText passwordEditText, View v) {
+        String email = emailEditText.getText().toString();
+        String password = passwordEditText.getText().toString();
+        boolean isValid = true;
+        if (TextUtils.isEmpty(email)) {
+            //Toast.makeText(v.getContext(), "Enter userid"
+            Toast.makeText(v.getContext(), R.string.missing_email
+                    , Toast.LENGTH_SHORT)
+                    .show();
+            emailEditText.requestFocus();
+            isValid = false;
+            //return;
+        }
+        else if (!email.contains("@")) {
+            Toast.makeText(v.getContext(), R.string.invalid_email
+                    , Toast.LENGTH_SHORT)
+                    .show();
+            emailEditText.requestFocus();
+            isValid = false;
+            //return;
+        }
+
+        else if (TextUtils.isEmpty(password)) {
+            Toast.makeText(v.getContext(), R.string.missing_password
+                    , Toast.LENGTH_SHORT)
+                    .show();
+            passwordEditText.requestFocus();
+            isValid = false;
+            //return;
+        }
+        else if (password.length() < 6) {
+            Toast.makeText(v.getContext()
+                    , R.string.invalid_password
+                    , Toast.LENGTH_SHORT)
+                    .show();
+            passwordEditText.requestFocus();
+            isValid = false;
+            //return;
+        }
+        return isValid;
+    }
+
+
+
+
+
+    /**
+     * Email validation pattern.
+     */
+    public final Pattern EMAIL_PATTERN = Pattern.compile(
+            "[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}" +
+                    "\\@" +
+                    "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +
+                    "(" +
+                    "\\." +
+                    "[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +
+                    ")+"
+    );
+
+    /**
+     * Validates if the given input is a valid email address.
+     *
+     * @param email        The email to validate.
+     * @return {@code true} if the input is a valid email. {@code false} otherwise.
+     */
+    public boolean isValidEmail(String email) {
+        return email != null && EMAIL_PATTERN.matcher(email).matches();
+    }
+
+    /**
+     *
+     * @param password Must be at least minimum length. (length 6)
+     * @return {@code true} if password is valid. {@code false} otherwise
+     */
+    public boolean isValidPassword(String password) {
+        return password.length() >= 6;
+    }
+
+
+
+
 
 
     @Override
@@ -117,6 +186,15 @@ public class LoginFragment extends Fragment {
      */
     public interface LoginInteractionListener {
         // TODO: Update argument type and name
+
         public void login(String userId, String pwd);
+        public void register(String userId, String pwd);
     }
+
+
+
+
+
+
+
 }
