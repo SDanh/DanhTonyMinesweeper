@@ -9,10 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import danhs.uw.tacoma.edu.danhtonyminesweeper.R;
+import danhs.uw.tacoma.edu.danhtonyminesweeper.account.Account;
 
 public class LeaderboardFragment extends Fragment {
 
-    private OnFragmentInteractionListener mListener;
+    private LeaderboardInteractionListener mListener;
 
     public LeaderboardFragment() {
         // Required empty public constructor
@@ -23,6 +24,7 @@ public class LeaderboardFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
     }
 
@@ -37,11 +39,11 @@ public class LeaderboardFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
+        if (context instanceof LeaderboardInteractionListener) {
+            mListener = (LeaderboardInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement LeaderboardInteractionListener");
         }
     }
 
@@ -61,8 +63,8 @@ public class LeaderboardFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
+    public interface LeaderboardInteractionListener {
         // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        void leaderboardInteraction(Account account);
     }
 }

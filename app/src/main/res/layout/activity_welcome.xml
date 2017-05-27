@@ -13,7 +13,7 @@
         android:id="@+id/leaderboard_button"
         android:layout_gravity="center"
         android:text="@string/leaderboard_text"
-        android:onClick="openLeaderBoards"/>
+        android:onClick="openLeaderboard"/>
 
 
 </LinearLayout>

@@ -4,5 +4,16 @@
     android:layout_height="match_parent"
     tools:context="danhs.uw.tacoma.edu.danhtonyminesweeper.leaderboard.LeaderboardFragment">
 
+    <TextView
+        android:id="@+id/username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?attr/textAppearanceListItem" />
+
+    <TextView
+        android:id="@+id/password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?attr/textAppearanceListItem" />
 
 </FrameLayout>

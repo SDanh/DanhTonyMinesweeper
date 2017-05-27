@@ -58,9 +58,9 @@ public class LoginFragment extends Fragment {
             }
         });
 
-        //register button NOT YET IMPLEMENTED
-        Button signUpButton = (Button) v.findViewById(R.id.register_button);
-        signUpButton.setOnClickListener(new View.OnClickListener() {
+        //register button
+        Button registerButton = (Button) v.findViewById(R.id.register_button);
+        registerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String userId = userIdText.getText().toString();

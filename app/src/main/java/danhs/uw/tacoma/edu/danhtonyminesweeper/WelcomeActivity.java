@@ -10,7 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import danhs.uw.tacoma.edu.danhtonyminesweeper.authenticate.SignInActivity;
-import danhs.uw.tacoma.edu.danhtonyminesweeper.leaderboard.LeaderBoardActivity;
+import danhs.uw.tacoma.edu.danhtonyminesweeper.leaderboard.LeaderboardActivity;
 
 public class WelcomeActivity extends AppCompatActivity {
 
@@ -49,8 +49,8 @@ public class WelcomeActivity extends AppCompatActivity {
     }
 
     //opens leaderboard activity
-    public void openLeaderBoards(View view){
-        Intent i = new Intent(this, LeaderBoardActivity.class);
+    public void openLeaderboard(View view){
+        Intent i = new Intent(this, LeaderboardActivity.class);
         startActivity(i);
         finish();
     }

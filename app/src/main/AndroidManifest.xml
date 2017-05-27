@@ -34,7 +34,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".leaderboard.LeaderBoardActivity" />
+        <activity android:name=".leaderboard.LeaderboardActivity" />
         <activity android:name=".WelcomeActivity"></activity>
     </application>
 

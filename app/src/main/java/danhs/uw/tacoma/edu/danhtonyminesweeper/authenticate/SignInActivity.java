@@ -45,7 +45,7 @@ public class SignInActivity extends AppCompatActivity implements LoginFragment.L
                 , Context.MODE_PRIVATE);
         if (!mSharedPreferences.getBoolean(getString(R.string.LOGGEDIN), false)) {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.fragment_container, new LoginFragment())
+                    .add(R.id.sign_in_fragment_container, new LoginFragment())
                     .commit();
         } else {
             Intent i = new Intent(this, WelcomeActivity.class);
