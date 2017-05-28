@@ -14,14 +14,21 @@
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".authenticate.SignInActivity">
+            <!--<intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>-->
+        </activity>
+        <activity android:name=".leaderboard.LeaderBoardActivity" />
+        <activity android:name=".WelcomeActivity" />
+        <activity android:name=".game.GameBoard_Activity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".leaderboard.LeaderBoardActivity" />
-        <activity android:name=".WelcomeActivity"></activity>
     </application>
 
 </manifest>
