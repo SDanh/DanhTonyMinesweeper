@@ -7,9 +7,6 @@
     tools:context="danhs.uw.tacoma.edu.danhtonyminesweeper.leaderboard.LeaderboardActivity"
     android:id="@+id/leaderboard_fragment_container">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="activity leaderboard"/>
+
 
 </android.support.constraint.ConstraintLayout>

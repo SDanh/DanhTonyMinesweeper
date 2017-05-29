@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="CREATE_STATS_SQL">
+        CREATE TABLE IF NOT EXISTS Stats
+        (username TEXT PRIMARY KEY, games TEXT,
+        won TEXT, lost TEXT)
+    </string>
+
+    <string name="DROP_STATS_SQL">
+        DROP TABLE IF EXISTS Stats
+    </string>
+</resources>

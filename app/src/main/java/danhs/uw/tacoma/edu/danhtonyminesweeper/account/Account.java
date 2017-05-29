@@ -1,15 +1,5 @@
 package danhs.uw.tacoma.edu.danhtonyminesweeper.account;
 
-/**
- * Created by Computer User on 5/24/2017.
- */
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.Serializable;
-import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,9 +7,6 @@ import org.json.JSONObject;
 import java.io.Serializable;
 import java.util.List;
 
-/**
- * Created by Computer User on 5/10/2017.
- */
 
 public class Account implements Serializable {
     private String username;
@@ -47,7 +34,7 @@ public class Account implements Serializable {
 
                 for (int i = 0; i < arr.length(); i++) {
                     JSONObject obj = arr.getJSONObject(i);
-                    Account course = new Account(obj.getString(Account.USERNAME), obj.getString(Account.PASSWORD));
+                    Account course = new Account(obj.getString(danhs.uw.tacoma.edu.danhtonyminesweeper.account.Account.USERNAME), obj.getString(danhs.uw.tacoma.edu.danhtonyminesweeper.account.Account.PASSWORD));
                     accountList.add(course);
                 }
             } catch (JSONException e) {

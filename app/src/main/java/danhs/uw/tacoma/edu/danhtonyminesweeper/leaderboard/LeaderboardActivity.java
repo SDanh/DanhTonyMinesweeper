@@ -3,15 +3,14 @@ package danhs.uw.tacoma.edu.danhtonyminesweeper.leaderboard;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import danhs.uw.tacoma.edu.danhtonyminesweeper.R;
 import danhs.uw.tacoma.edu.danhtonyminesweeper.account.Account;
+import danhs.uw.tacoma.edu.danhtonyminesweeper.account.Stats;
 import danhs.uw.tacoma.edu.danhtonyminesweeper.authenticate.SignInActivity;
 
 public class LeaderboardActivity extends AppCompatActivity implements LeaderboardFragment.LeaderboardInteractionListener {
@@ -71,7 +70,7 @@ public class LeaderboardActivity extends AppCompatActivity implements Leaderboar
         return super.onOptionsItemSelected(item);
     }
 
-    public void leaderboardInteraction(Account account) {
+    public void leaderboardInteraction(Stats stats) {
 
     }
 }

@@ -12,8 +12,9 @@
     <string name="sign_up_text">Register</string>
 
     <!--login preferences-->
-    <string name="LOGIN_PREFS">edu.tacoma.uw.webserviceslab.PREFS</string>
+    <string name="LOGIN_PREFS">uw.tacoma.edu.danhtonyminesweeper.PREFS</string>
     <string name="LOGGEDIN">loggedin</string>
+    <string name="LOGIN_FILE"> danhs.uw.tacoma.edu.danhtonyminesweeper.LOGIN_FILE</string>
 
     <string name="action_logout">Log Out</string>
 
@@ -29,6 +30,8 @@
     <string name="invalid_password">Enter password of at least 6 characters</string>
 
 
-
+    <string name="games">Games</string>
+    <string name="won">Won</string>
+    <string name="lost">Lost</string>
 
 </resources>

@@ -11,15 +11,16 @@ import android.widget.TextView;
 import java.util.List;
 
 import danhs.uw.tacoma.edu.danhtonyminesweeper.R;
-import danhs.uw.tacoma.edu.danhtonyminesweeper.account.Account;
+//import danhs.uw.tacoma.edu.danhtonyminesweeper.account.Account;
+import danhs.uw.tacoma.edu.danhtonyminesweeper.account.Stats;
 import danhs.uw.tacoma.edu.danhtonyminesweeper.leaderboard.LeaderboardFragment.LeaderboardInteractionListener;
 
 public class LeaderboardRecyclerViewAdapter extends RecyclerView.Adapter<LeaderboardRecyclerViewAdapter.ViewHolder> {
 
-    private final List<Account> mValues;
+    private final List<Stats> mValues;
     private final LeaderboardInteractionListener mListener;
 
-    public LeaderboardRecyclerViewAdapter(List<Account> items, LeaderboardInteractionListener listener) {
+    public LeaderboardRecyclerViewAdapter(List<Stats> items, LeaderboardInteractionListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -35,7 +36,10 @@ public class LeaderboardRecyclerViewAdapter extends RecyclerView.Adapter<Leaderb
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
         holder.mUsernameView.setText(mValues.get(position).getUsername());
-        holder.mContentView.setText(mValues.get(position).getPassword());
+        holder.mGamesView.setText(mValues.get(position).getGames());
+        holder.mWonView.setText(mValues.get(position).getWon());
+        holder.mLostView.setText(mValues.get(position).getLost());
+
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,19 +61,24 @@ public class LeaderboardRecyclerViewAdapter extends RecyclerView.Adapter<Leaderb
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final TextView mUsernameView;
-        public final TextView mContentView;
-        public Account mItem;
+        public final TextView mGamesView;
+        public final TextView mWonView;
+        public final TextView mLostView;
+
+        public Stats mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
             mUsernameView = (TextView) view.findViewById(R.id.username);
-            mContentView = (TextView) view.findViewById(R.id.password);
+            mGamesView = (TextView) view.findViewById(R.id.games);
+            mWonView = (TextView) view.findViewById(R.id.won);
+            mLostView = (TextView) view.findViewById(R.id.lost);
         }
 
         @Override
         public String toString() {
-            return super.toString() + " '" + mContentView.getText() + "'";
+            return super.toString() + " '" + mGamesView.getText() + "'";
         }
     }
 }

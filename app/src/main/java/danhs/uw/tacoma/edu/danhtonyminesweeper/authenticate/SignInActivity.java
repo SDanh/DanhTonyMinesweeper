@@ -70,14 +70,14 @@ public class SignInActivity extends AppCompatActivity implements LoginFragment.L
         //The check to go to the welcome screen finishes before the async task sets the value being checked.
         //It is an asynchronous threading issue
 
-        /*
+        //*
         // does nothing
         try {
             loginTask.get(10000, TimeUnit.MILLISECONDS);
         } catch (Exception e) {
             Log.e(TAG, "login ", e);
         }
-        */
+        //*/
 
         /*
         // program crashes
@@ -123,6 +123,35 @@ public class SignInActivity extends AppCompatActivity implements LoginFragment.L
             finish();
         }
     }
+
+    /**
+     * Consolidates code from the login and register classes.
+     * @param username
+     * @param password
+     * @param choice
+     */
+    private void loginRegister(String username, String password, String choice) {
+        String url = buildLoginURL(username, password);
+        if(choice.equals("login")) {
+            LoginTask loginTask = new LoginTask();
+            loginTask.execute(new String[]{url.toString()});
+        } else if(choice.equals("register")) {
+            RegisterTask registerTask = new RegisterTask();
+            registerTask.execute(new String[]{url.toString()});
+        } else {
+            throw new IllegalArgumentException("choice has incorrect value");
+        }
+
+
+
+
+        if(mSharedPreferences.getBoolean(getString(R.string.LOGGEDIN), false)) {
+            Intent i = new Intent(this, WelcomeActivity.class);
+            startActivity(i);
+            finish();
+        }
+    }
+
 
 
 
