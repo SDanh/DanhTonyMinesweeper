@@ -12,7 +12,7 @@ import java.util.List;
 
 import danhs.uw.tacoma.edu.danhtonyminesweeper.R;
 //import danhs.uw.tacoma.edu.danhtonyminesweeper.account.Account;
-import danhs.uw.tacoma.edu.danhtonyminesweeper.account.Stats;
+import danhs.uw.tacoma.edu.danhtonyminesweeper.data.Stats;
 import danhs.uw.tacoma.edu.danhtonyminesweeper.leaderboard.LeaderboardFragment.LeaderboardInteractionListener;
 
 public class LeaderboardRecyclerViewAdapter extends RecyclerView.Adapter<LeaderboardRecyclerViewAdapter.ViewHolder> {

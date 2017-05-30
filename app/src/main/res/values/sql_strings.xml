@@ -9,4 +9,15 @@
     <string name="DROP_STATS_SQL">
         DROP TABLE IF EXISTS Stats
     </string>
+
+    <string name="CREATE_ACHIEVEMENTS_SQL">
+        CREATE TABLE IF NOT EXISTS Achievements
+        (name TEXT PRIMARY KEY, description TEXT,
+        condition TEXT)
+    </string>
+
+    <string name="DROP_ACHIEVEMENTS_SQL">
+        DROP TABLE IF EXISTS Achievements
+    </string>
+
 </resources>

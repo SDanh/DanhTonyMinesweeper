@@ -1,4 +1,4 @@
-package danhs.uw.tacoma.edu.danhtonyminesweeper.account;
+package danhs.uw.tacoma.edu.danhtonyminesweeper.data;
 
 
 import org.json.JSONArray;
@@ -14,6 +14,7 @@ public class Stats {
     public static final String LOST= "lost";
 
     private String username;
+    // string representation of an integer
     private String games;
     private String won;
     private String lost;
@@ -68,6 +69,9 @@ public class Stats {
     public void setGames(String games) {
         this.games = games;
     }
+    public void setGames(Integer games) {
+        this.games = games.toString();
+    }
 
     public String getWon() {
         return won;
@@ -76,6 +80,9 @@ public class Stats {
     public void setWon(String won) {
         this.won = won;
     }
+    public void setWon(Integer won) {
+        this.won = won.toString();
+    }
 
     public String getLost() {
         return lost;
@@ -83,5 +90,24 @@ public class Stats {
 
     public void setLost(String lost) {
         this.lost = lost;
+    }
+    public void setLost(Integer lost) {
+        this.lost = lost.toString();
+    }
+
+
+
+    public Integer get(String key) {
+        Integer i = null;
+        switch (key) {
+            case "games":
+                return Integer.parseInt(games);
+            case "won":
+                return Integer.parseInt(won);
+            case "lost":
+                return Integer.parseInt(lost);
+            default:
+                return null;
+        }
     }
 }

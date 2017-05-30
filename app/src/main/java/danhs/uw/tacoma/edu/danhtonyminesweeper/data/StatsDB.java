@@ -1,4 +1,4 @@
-package danhs.uw.tacoma.edu.danhtonyminesweeper.account;
+package danhs.uw.tacoma.edu.danhtonyminesweeper.data;
 
 
 import android.content.ContentValues;

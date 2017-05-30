@@ -1,6 +1,7 @@
-package danhs.uw.tacoma.edu.danhtonyminesweeper.leaderboard;
+package danhs.uw.tacoma.edu.danhtonyminesweeper.achievement;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -22,46 +23,43 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import danhs.uw.tacoma.edu.danhtonyminesweeper.R;
+import danhs.uw.tacoma.edu.danhtonyminesweeper.data.Achievements;
+import danhs.uw.tacoma.edu.danhtonyminesweeper.data.AchievementsDB;
 import danhs.uw.tacoma.edu.danhtonyminesweeper.data.Stats;
 import danhs.uw.tacoma.edu.danhtonyminesweeper.data.StatsDB;
 
-public class LeaderboardFragment extends Fragment {
+public class AchievementFragment extends Fragment {
 
-    private static final String TAG = "LeaderboardFragment";
+    private static final String TAG = "AchievementFragment";
 
     private static final String ARG_COLUMN_COUNT = "column-count";
-    private static final String LEADERBOARD_URL
-            = "http://cssgate.insttech.washington.edu/~_450bteam15/list.php";
+    private static final String ACHIEVEMENT_URL
+            = "http://cssgate.insttech.washington.edu/~_450bteam15/achievements.php";
 
 
     private int mColumnCount = 1;
-    private LeaderboardInteractionListener mListener;
+    private AchievementInteractionListener mListener;
     private RecyclerView mRecyclerView;
+    private AchievementsDB mAchievementsDB;
+    private List<Achievements> mAchievementsList;
     private StatsDB mStatsDB;
-    private List<Stats> mStatsList;
+    private SharedPreferences mSharedPreferences;
 
 
-
-
-
-
-
-
-
-
-
-    public LeaderboardFragment() {
+    public AchievementFragment() {
         // Required empty public constructor
     }
 
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.i(TAG, "onCreate");
         super.onCreate(savedInstanceState);
-
+        mSharedPreferences = getActivity().getSharedPreferences(getString(R.string.username)
+                , Context.MODE_PRIVATE);
 
     }
 
@@ -70,14 +68,14 @@ public class LeaderboardFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_leaderboard, container, false);
+        return inflater.inflate(R.layout.fragment_achievement, container, false);
     }
 */
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_leaderboard_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_achievement_list, container, false);
 
         // Set the adapter
         if (view instanceof RecyclerView) {
@@ -88,8 +86,8 @@ public class LeaderboardFragment extends Fragment {
             } else {
                 mRecyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            DownloadLeaderboardTask task = new DownloadLeaderboardTask();
-            task.execute(new String[]{LEADERBOARD_URL});
+            DownloadAchievementTask task = new DownloadAchievementTask();
+            task.execute(new String[]{ACHIEVEMENT_URL});
         }
 
 
@@ -97,20 +95,25 @@ public class LeaderboardFragment extends Fragment {
                 getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
-            DownloadLeaderboardTask task = new DownloadLeaderboardTask();
-            task.execute(new String[]{LEADERBOARD_URL});
-        }
-        else {
+            DownloadAchievementTask task = new DownloadAchievementTask();
+            task.execute(new String[]{ACHIEVEMENT_URL});
+        } else {
             Toast.makeText(view.getContext(),
                     "No network connection available. Displaying locally stored data",
-                    Toast.LENGTH_SHORT) .show();
+                    Toast.LENGTH_SHORT).show();
+            if (mAchievementsDB == null) {
+                mAchievementsDB = new AchievementsDB(getActivity());
+            }
             if (mStatsDB == null) {
                 mStatsDB = new StatsDB(getActivity());
             }
-            if (mStatsList == null) {
-                mStatsList = mStatsDB.getStats();
+            // filter out achievements not earned
+            if (mAchievementsList == null) {
+                List<Achievements> tempAchievementsList = mAchievementsDB.getAchievements();
+                //mAchievementsList = getAchievementsEarned(tempAchievementsList);
+                mAchievementsList = tempAchievementsList;
             }
-            mRecyclerView.setAdapter(new LeaderboardRecyclerViewAdapter(mStatsList, mListener));
+            mRecyclerView.setAdapter(new AchievementRecyclerViewAdapter(mAchievementsList, mListener));
         }
         //Read from file and show the text
 
@@ -118,7 +121,7 @@ public class LeaderboardFragment extends Fragment {
             InputStream inputStream = getActivity().openFileInput(
                     getString(R.string.LOGIN_FILE));
 
-            if ( inputStream != null ) {
+            if (inputStream != null) {
                 InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
                 BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
                 String receiveString = "";
@@ -155,11 +158,11 @@ public class LeaderboardFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof LeaderboardInteractionListener) {
-            mListener = (LeaderboardInteractionListener) context;
+        if (context instanceof AchievementInteractionListener) {
+            mListener = (AchievementInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement LeaderboardInteractionListener");
+                    + " must implement AchievementInteractionListener");
         }
     }
 
@@ -179,21 +182,64 @@ public class LeaderboardFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface LeaderboardInteractionListener {
+    public interface AchievementInteractionListener {
         // TODO: Update argument type and name
-        void leaderboardInteraction(Stats stats);
+        void achievementInteraction(Achievements achievements);
+    }
+
+
+    /**
+     * Gets the achievements user has actually earned from a list of all achievements
+     * @param fullAchievementsList A list of all achievements
+     * @return A list of achievements actually earned.
+     */
+    public List<Achievements> getAchievementsEarned(List<Achievements> fullAchievementsList) {
+        // filter out achievements not earned
+        Log.d(TAG, "getter entered");
+        ArrayList<Achievements> achievementsList = new ArrayList<>();
+        for(int i = 0; i < fullAchievementsList.size(); i++) {
+            Achievements achievements = fullAchievementsList.get(i);
+            Map<String, Integer> condition = achievements.getConditionMap();
+
+            List<Stats> statsList = mStatsDB.getStats();
+            Stats account = null;
+            // get stats for the account currently logged in.
+            for(Stats stats: statsList) {
+                if(stats.getUsername().equals(mSharedPreferences.getString(getString(R.string.username), null))) {
+                    account = stats;
+                }
+            }
+            boolean conditionMet = false;
+            if(account != null) {
+                conditionMet = true;
+                // go through all the conditions
+                for (String key : condition.keySet()) {
+                    // database uses key played
+                    // sqlite uses key games
+                    if (key.equals("played")) {
+                        key = "games";
+                    }
+                    // condition <= account means condition met
+                    conditionMet &= account.get(key).compareTo(condition.get(key)) >= 0;
+                }
+            }
+
+            // if condition is met add to list of achievements
+            if(conditionMet) {
+                achievementsList.add(achievements);
+            }
+        }
+        Log.d(TAG, achievementsList.toString());
+        return achievementsList;
     }
 
 
 
 
+    private class DownloadAchievementTask extends AsyncTask<String, Void, String> {
 
-
-
-    private class DownloadLeaderboardTask extends AsyncTask<String, Void, String> {
-
-        private StatsDB mStatsDB;
-        private List<Stats> mStatsList;
+        private AchievementsDB mAchievementsDB;
+        private List<Achievements> mAchievementsList;
 
 
         @Override
@@ -214,7 +260,7 @@ public class LeaderboardFragment extends Fragment {
                     }
 
                 } catch (Exception e) {
-                    response = "Unable to download Stats, Reason: "
+                    response = "Unable to download Achievements, Reason: "
                             + e.getMessage();
                 } finally {
                     if (urlConnection != null)
@@ -235,67 +281,54 @@ public class LeaderboardFragment extends Fragment {
             }
 
             Log.d(TAG,result);
-            mStatsList = new ArrayList<Stats>();
-            result = Stats.parseStatsJSON(result, mStatsList);
+            List<Achievements> tempAchievementsList = new ArrayList<Achievements>();
+            String statusresult = Achievements.parseAchievementsJSON(result, tempAchievementsList);
+            // filter out achievements not earned
+            //mAchievementsList = getAchievementsEarned(tempAchievementsList);
+            mAchievementsList = tempAchievementsList;
+
+
+
+
+
+
+
+
 
             // Something wrong with the JSON returned.
-            if (result != null) {
+            if (statusresult != null) {
                 Toast.makeText(getActivity().getApplicationContext(), result, Toast.LENGTH_LONG)
                         .show();
                 return;
             }
 
             // Everything is good, show the list of courses.
-            if (!mStatsList.isEmpty()) {
+            if (!mAchievementsList.isEmpty()) {
 
-                if (mStatsDB == null) {
-                    mStatsDB = new StatsDB(getActivity());
+                if (mAchievementsDB == null) {
+                    mAchievementsDB = new AchievementsDB(getActivity());
                 }
 
                 // Delete old data so that you can refresh the local
                 // database with the network data.
-                mStatsDB.deleteStats();
+                mAchievementsDB.deleteAchievements();
+
 
                 // Also, add to the local database
-                for (int i = 0; i < mStatsList.size(); i++) {
-                    Stats stats = mStatsList.get(i);
-                    mStatsDB.insertStats(stats.getUsername(),
-                            stats.getGames(),
-                            stats.getWon(),
-                            stats.getLost());
+                for (int i = 0; i < mAchievementsList.size(); i++) {
+                    Achievements achievements = mAchievementsList.get(i);
+                    mAchievementsDB.insertAchievements(achievements.getName(),
+                            achievements.getDescription(),
+                            achievements.getCondition());
                 }
 
 
-                //mFirstCourse = mStatsList.get(0);
-                mRecyclerView.setAdapter(new LeaderboardRecyclerViewAdapter(mStatsList, mListener));
+
+                //mFirstCourse = mAchievementsList.get(0);
+                mRecyclerView.setAdapter(new AchievementRecyclerViewAdapter(mAchievementsList, mListener));
             }
         }
 
-
-
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }

@@ -9,8 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import danhs.uw.tacoma.edu.danhtonyminesweeper.R;
-import danhs.uw.tacoma.edu.danhtonyminesweeper.account.Account;
-import danhs.uw.tacoma.edu.danhtonyminesweeper.account.Stats;
+import danhs.uw.tacoma.edu.danhtonyminesweeper.data.Stats;
 import danhs.uw.tacoma.edu.danhtonyminesweeper.authenticate.SignInActivity;
 
 public class LeaderboardActivity extends AppCompatActivity implements LeaderboardFragment.LeaderboardInteractionListener {
@@ -73,4 +72,12 @@ public class LeaderboardActivity extends AppCompatActivity implements Leaderboar
     public void leaderboardInteraction(Stats stats) {
 
     }
+
+
+
+
+
+
+
+
 }

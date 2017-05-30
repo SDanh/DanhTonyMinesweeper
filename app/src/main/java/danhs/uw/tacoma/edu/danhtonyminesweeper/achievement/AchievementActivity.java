@@ -1,4 +1,4 @@
-package danhs.uw.tacoma.edu.danhtonyminesweeper;
+package danhs.uw.tacoma.edu.danhtonyminesweeper.achievement;
 
 import android.content.Context;
 import android.content.Intent;
@@ -7,32 +7,47 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.TextView;
 
-import danhs.uw.tacoma.edu.danhtonyminesweeper.achievement.AchievementActivity;
+import danhs.uw.tacoma.edu.danhtonyminesweeper.R;
+import danhs.uw.tacoma.edu.danhtonyminesweeper.data.Achievements;
 import danhs.uw.tacoma.edu.danhtonyminesweeper.authenticate.SignInActivity;
-import danhs.uw.tacoma.edu.danhtonyminesweeper.leaderboard.LeaderboardActivity;
 
-public class WelcomeActivity extends AppCompatActivity {
+public class AchievementActivity extends AppCompatActivity implements AchievementFragment.AchievementInteractionListener {
 
-    private TextView welcomeTextView;
-    private SharedPreferences mSharedPreferences;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_welcome);
-        welcomeTextView = (TextView) findViewById(R.id.welcome_text_view);
+        setContentView(R.layout.activity_achievement);
+
+
+
+        if (savedInstanceState == null || getSupportFragmentManager().findFragmentById(R.id.fragment_achievement_list) == null) {
+            AchievementFragment achievementFragment = new AchievementFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.achievement_fragment_container, achievementFragment)
+                    .commit();
+        }
+        /*
+        AchievementFragment achievementFragment = new AchievementFragment();
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.achievement_fragment_container, achievementFragment)
+                .commit();
+        */
+
     }
 
-    //attaches main menu to main activity
+    //attaches menu to welcome activity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -54,32 +69,7 @@ public class WelcomeActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        setWelcomeTextView();
-    }
+    public void achievementInteraction(Achievements achievements) {
 
-
-    private void setWelcomeTextView() {
-        mSharedPreferences = getSharedPreferences(getString(R.string.LOGIN_PREFS)
-                , Context.MODE_PRIVATE);
-        String s = "Welcome\n" +
-                mSharedPreferences.getString(getString(R.string.username), "");
-        welcomeTextView.setText(s);
-    }
-
-    //opens leaderboard activity
-    public void openLeaderboard(View view){
-        Intent i = new Intent(this, LeaderboardActivity.class);
-        startActivity(i);
-        //finish();
-    }
-
-    //opens leaderboard activity
-    public void openAchievement(View view){
-        Intent i = new Intent(this, AchievementActivity.class);
-        startActivity(i);
-        //finish();
     }
 }

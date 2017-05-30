@@ -1,4 +1,4 @@
-package danhs.uw.tacoma.edu.danhtonyminesweeper.account;
+package danhs.uw.tacoma.edu.danhtonyminesweeper.data;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -34,7 +34,7 @@ public class Account implements Serializable {
 
                 for (int i = 0; i < arr.length(); i++) {
                     JSONObject obj = arr.getJSONObject(i);
-                    Account course = new Account(obj.getString(danhs.uw.tacoma.edu.danhtonyminesweeper.account.Account.USERNAME), obj.getString(danhs.uw.tacoma.edu.danhtonyminesweeper.account.Account.PASSWORD));
+                    Account course = new Account(obj.getString(danhs.uw.tacoma.edu.danhtonyminesweeper.data.Account.USERNAME), obj.getString(danhs.uw.tacoma.edu.danhtonyminesweeper.data.Account.PASSWORD));
                     accountList.add(course);
                 }
             } catch (JSONException e) {

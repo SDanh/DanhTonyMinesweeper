@@ -60,17 +60,18 @@ public class SignInActivity extends AppCompatActivity implements LoginFragment.L
      */
     @Override
     public void login(String username, String password) {
-
+        loginRegister(username, password, "login");
+        /*
         String url = buildLoginURL(username, password);
         LoginTask loginTask = new LoginTask();
         loginTask.execute(new String[]{url.toString()});
-
+        */
 
         //Bug must click login button twice to return to welcome screen
         //The check to go to the welcome screen finishes before the async task sets the value being checked.
         //It is an asynchronous threading issue
 
-        //*
+        /*
         // does nothing
         try {
             loginTask.get(10000, TimeUnit.MILLISECONDS);
@@ -87,12 +88,13 @@ public class SignInActivity extends AppCompatActivity implements LoginFragment.L
 
         }
         */
-
+        /*
         if(mSharedPreferences.getBoolean(getString(R.string.LOGGEDIN), false)) {
             Intent i = new Intent(this, WelcomeActivity.class);
             startActivity(i);
             finish();
         }
+        */
     }
 
     /**
@@ -100,7 +102,8 @@ public class SignInActivity extends AppCompatActivity implements LoginFragment.L
      */
     @Override
     public void register(String username, String password) {
-
+        loginRegister(username, password, "register");
+        /*
         String url = buildRegisterURL(username, password);
         RegisterTask registerTask = new RegisterTask();
         registerTask.execute(new String[]{url.toString()});
@@ -108,9 +111,6 @@ public class SignInActivity extends AppCompatActivity implements LoginFragment.L
         //Bug must click register button twice to return to welcome screen
         //The check to go to the welcome screen finishes before the async task sets the value being checked.
         //It is an asynchronous threading issue
-
-
-
 
 
         //mSharedPreferences
@@ -122,6 +122,7 @@ public class SignInActivity extends AppCompatActivity implements LoginFragment.L
             startActivity(i);
             finish();
         }
+        */
     }
 
     /**
@@ -132,19 +133,36 @@ public class SignInActivity extends AppCompatActivity implements LoginFragment.L
      */
     private void loginRegister(String username, String password, String choice) {
         String url = buildLoginURL(username, password);
+        AsyncTask task;
         if(choice.equals("login")) {
-            LoginTask loginTask = new LoginTask();
-            loginTask.execute(new String[]{url.toString()});
+            //LoginTask loginTask = new LoginTask();
+            task = new LoginTask();
+            //loginTask.execute(new String[]{url.toString()});
         } else if(choice.equals("register")) {
-            RegisterTask registerTask = new RegisterTask();
-            registerTask.execute(new String[]{url.toString()});
+            //RegisterTask registerTask = new RegisterTask();
+            task = new RegisterTask();
+            //registerTask.execute(new String[]{url.toString()});
+
         } else {
             throw new IllegalArgumentException("choice has incorrect value");
         }
+        task.execute(new String[]{url.toString()});
 
 
 
-
+        mSharedPreferences
+                .edit()
+                .putString(getString(R.string.username), username)
+                .apply();
+        // does nothing
+        /*
+        try {
+            //task.get(10000, TimeUnit.MILLISECONDS);
+            task.get();
+        } catch (Exception e) {
+            Log.e(TAG, "login ", e);
+        }
+        //*/
         if(mSharedPreferences.getBoolean(getString(R.string.LOGGEDIN), false)) {
             Intent i = new Intent(this, WelcomeActivity.class);
             startActivity(i);
@@ -244,6 +262,7 @@ public class SignInActivity extends AppCompatActivity implements LoginFragment.L
         @Override
         protected void onPostExecute(String result) {
             // Something wrong with the network or the URL.
+            Log.d(TAG, result);
             try {
                 JSONObject jsonObject = new JSONObject(result);
                 String status = (String) jsonObject.get("result");

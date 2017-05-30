@@ -21,7 +21,6 @@
     <string name="leaderboard_text">Leaderboard</string>
 
 
-
     <!--Login error response-->
 
     <string name="missing_email">Enter userid</string>
@@ -30,8 +29,10 @@
     <string name="invalid_password">Enter password of at least 6 characters</string>
 
 
+    <string name="username">Username</string>
     <string name="games">Games</string>
     <string name="won">Won</string>
     <string name="lost">Lost</string>
+    <string name="achievement_text">Achievements</string>
 
 </resources>
