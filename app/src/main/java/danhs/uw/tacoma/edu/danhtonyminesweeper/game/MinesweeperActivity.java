@@ -1,19 +1,13 @@
 package danhs.uw.tacoma.edu.danhtonyminesweeper.game;
 
-import android.content.Context;
-import android.media.Image;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.os.Bundle;
-import android.app.Activity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -23,6 +17,10 @@ import java.util.List;
 
 import danhs.uw.tacoma.edu.danhtonyminesweeper.R;
 
+/**
+ * Minesweeper Activity holds the visual user interface for a functional game of Minesweeper.
+ * This game allows you to tap or flag a cell and shows the effects it has on the board.
+ */
 public class MinesweeperActivity extends AppCompatActivity {
 
     Game mGame;
@@ -33,11 +31,11 @@ public class MinesweeperActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_minesweeper);
 
-
-
+        //create a new minesweeper game
         mGame = new Game(10,10,0.1);
         mGame.NewGame();
 
+        //toggle button for flag
         ToggleButton toggle = (ToggleButton) findViewById(R.id.Flag_Toggle);
         toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -49,17 +47,13 @@ public class MinesweeperActivity extends AppCompatActivity {
             }
         });
 
-
-
         // Get the widgets reference from XML layout
         GridView gv = (GridView) findViewById(R.id.gv);
+        gv.setNumColumns(mGame.getWidth());
+
         final TextView tv = (TextView) findViewById(R.id.tv);
-
         final ArrayAdapter<String> GameBoardAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,AdaptPlayingBoard());
-
         gv.setAdapter(GameBoardAdapter);
-
-        //gv.setAdapter(new ArrayAdapter<String>( this, android.R.layout.simple_list_item_1,plantsList));
 
         gv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -70,6 +64,9 @@ public class MinesweeperActivity extends AppCompatActivity {
                 xPos++;
 
                 Log.d("Cell", position+1 + "("+ xPos + ", " +yPos + "): " + mGame.getSolution()[yPos-1][xPos-1]);
+
+                //If toggled. remove flag of flagged cells and add flage to unflagged cells.
+                //Else tap cell
                 if(mGame.getToggle()){
                     if(mGame.isFlagged(xPos,yPos)){
                         mGame.removeFlag(xPos,yPos);
@@ -77,6 +74,8 @@ public class MinesweeperActivity extends AppCompatActivity {
                     else mGame.flagCell(xPos,yPos);
                 }
                 else mGame.tapCell(xPos, yPos);
+
+                //update game and update adapter to display changed playing board
                 GameBoardAdapter.clear();
                 GameBoardAdapter.addAll(AdaptPlayingBoard());
                 GameBoardAdapter.notifyDataSetChanged();
@@ -91,6 +90,7 @@ public class MinesweeperActivity extends AppCompatActivity {
 
     }
 
+    //adapts the playing board as a string for Array Adapter
     public List<String> AdaptPlayingBoard(){
         String[][]temp = mGame.getPlaying_board();
         ArrayList<String> singleDArray = new ArrayList<String>();
@@ -98,32 +98,6 @@ public class MinesweeperActivity extends AppCompatActivity {
             singleDArray.addAll(Arrays.asList(array));
         }
         return singleDArray;
-    }
-    public List<ImageView> AdaptPlayingBoard2(){
-        String[][]temp = mGame.getPlaying_board();
-        ArrayList<String> singleDArray = new ArrayList<String>();
-        ArrayList<ImageView> ImgArray = new ArrayList<ImageView>();
-
-        for (String[] array :temp) {
-            singleDArray.addAll(Arrays.asList(array));
-        }
-        for(String cell: singleDArray){
-            ImageView tempIV = new ImageView(this);
-            if(cell.equals(Game.HIDDEN)){
-                //tempTV.s
-            }
-            if(cell.equals(Game.EMPTY)){
-                //
-            }
-            if(cell.equals(Game.MINE)){
-                //
-            }
-            if(cell.equals(Game.FLAG)){
-                //
-            }
-            ImgArray.add(tempIV);
-        }
-        return ImgArray;
     }
 
 }

@@ -3,15 +3,30 @@ package danhs.uw.tacoma.edu.danhtonyminesweeper.game;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Game is the Model for a Minesweeper game, immplenting all the required methods and processes for
+ * a minesweeper game to work.
+ */
 public class Game {
 
     private int length;
     private int width;
     private double probability;
 
+    /**
+     * 2D boolean array of the game board listing mines.
+     */
     private boolean[][] mine_map;
+    /**
+     * 2D integer array of the game board listing adjacent mines to each cell.
+     * With -1 indicating a mine.
+     */
     private int[][] solution;
 
+    /**
+     * 2D String array of the game board used for playing the game and will change as the player
+     * interacts (tapping and flagging cells).
+     */
     private String[][] playing_board;
     public static final String HIDDEN = "X";
     public static final String MINE = "*";
@@ -198,7 +213,7 @@ public class Game {
     private void tapCell2(int x, int y){
         int myX = x-1;
         int myY = y-1;
-        //System.out.println(myX + "," + myY);
+
         //Base Cases
         if (!inbounds(myX,myY)) return;
         if (mine_map[myY][myX]) return;
