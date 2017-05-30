@@ -1,6 +1,8 @@
 package danhs.uw.tacoma.edu.danhtonyminesweeper.game;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Game {
 
@@ -15,14 +17,15 @@ public class Game {
     public final String HIDDEN = "X";
     public final String MINE = "*";
     public final String EMPTY = ".";
-    final String FLAG = "O";
+    public final String FLAG = "O";
 
-    private ArrayList<CoordPair> mineList = new ArrayList<>();//list of mine coordinates
-    private ArrayList<CoordPair> flagList = new ArrayList<>();//list of flag coordinates
-    private ArrayList<CoordPair> exploreList = new ArrayList<>();//list of explored cell coordinates
+    private Set<CoordPair> mineList = new HashSet<>();//list of mine coordinates
+    private Set<CoordPair> flagList = new HashSet<>();//list of flag coordinates
+    private Set<CoordPair> hiddenList = new HashSet<>();//list of flag coordinates
 
-    private boolean First_Tap_of_Game;
-    private boolean GAME_OVER;
+    private boolean Flag_Mode = false;
+    private boolean GAME_OVER = false;
+    boolean WIN = false;
 
     /**
      * Public Constructor to create a new Minesweeper Game
@@ -37,28 +40,6 @@ public class Game {
         NewGame();
 
     }
-    /**
-     * Constructor to create a new game from a pre-created played game.
-     * @param mine_map
-     * @param solution
-     * @param playing_board
-     */
-    public Game(boolean[][] mine_map, int[][] solution, String[][] playing_board, int length, int width, double probability){
-
-        setLength(length);
-        setWidth(width);
-        setProbability(probability);
-
-        First_Tap_of_Game = true;
-        GAME_OVER = false;
-
-        this.mine_map = mine_map;
-        makeMineList();
-
-        this.solution = solution;
-        this.playing_board = playing_board;
-
-    }
 
     /**
      * Constructor to create a new game from a pre-created unplayed game.
@@ -70,9 +51,6 @@ public class Game {
         setLength(length);
         setWidth(width);
         setProbability(probability);
-
-        First_Tap_of_Game = true;
-        GAME_OVER = false;
 
         this.mine_map = mine_map;
         makeMineList();
@@ -90,15 +68,15 @@ public class Game {
      * Creates a new game.
      */
     public void NewGame(){
-        First_Tap_of_Game = true;
-        GAME_OVER = false;
-
+        Flag_Mode = false;
         //lists reset to be empty
-        mineList = new ArrayList<>();
-        flagList = new ArrayList<>();
-        exploreList = new ArrayList<>();
-        generateBoard();
+        mineList = new HashSet<>();
+        flagList = new HashSet<>();
 
+        generateBoard();
+        makeMineList();
+        GAME_OVER = false;
+        WIN = false;
     }
 
     /**
@@ -106,19 +84,17 @@ public class Game {
      */
     private void generateBoard(){
         mine_map = new boolean[length][width];
+        playing_board = new String[length][width];
         for (int i = 0; i < length; i++){
-            for (int j = 0; j < width; j++) mine_map[i][j] = (Math.random() < probability);
+            for (int j = 0; j < width; j++){
+                playing_board[i][j] = HIDDEN;
+                mine_map[i][j] = (Math.random() < probability);
+            }
         }
         makeMineList();
         solution = new int[length][width];
         for (int i = 0; i < length; i++){
             for (int j = 0; j < width; j++) checkMines(i, j);
-        }
-
-        // the playing board displayed to the player, initialized as an entirely hidden board
-        playing_board = new String[length][width];
-        for (int i = 0; i < length; i++){
-            for (int j = 0; j < width; j++) playing_board[i][j] = HIDDEN;
         }
 
     }
@@ -140,16 +116,17 @@ public class Game {
                 }
             }
         }
+        if(solution[x][y] == 0) solution[x][y] = -1;
     }
 
     /**
      * Private helper method to populate MineList with Mine Coordinates.
      */
     private void makeMineList(){
-        mineList = new ArrayList<>();
+        mineList = new HashSet<>();
         for (int i = 0; i < length; i++){
             for (int j = 0; j < width; j++){
-                if(mine_map[i][j]) mineList.add(new CoordPair(i, j));
+                if(mine_map[i][j]) mineList.add(new CoordPair(j, i));
             }
         }
     }
@@ -180,18 +157,15 @@ public class Game {
         int myX = x-1;
         int myY = y-1;
 
-        //Special Case, the First Cell to be tapped is ALWAYS NEVER a mine
-        if(First_Tap_of_Game && mine_map[myX][myY]){
-            while(mine_map[myX][myY]) generateBoard();//keeps generating a new board until one exists where first cell is empty
-            exploreList.add(new CoordPair(myX, myY));
-            playing_board[myX][myY] = EMPTY;
-        }
-        First_Tap_of_Game = false;
-
-        if (mine_map[myX][myY]){
+        if (mine_map[myY][myX]){
+            playing_board[myY][myX] = MINE;
+            WIN = true;
             GAME_OVER = true;
+            //System.out.println("YOU HIT A MINE");
         }
-        else tapCell2(x, y);
+        else if(playing_board[myY][myX] != FLAG){
+            tapCell2(x, y);
+        }
         updateGame();
 
     }
@@ -212,31 +186,30 @@ public class Game {
     private void tapCell2(int x, int y){
         int myX = x-1;
         int myY = y-1;
-
+        //System.out.println(myX + "," + myY);
         //Base Cases
         if (!inbounds(myX,myY)){
             //System.out.println("inbounds");
             return;
         }
-
-        if (mine_map[myX][myY]){
+        if (mine_map[myY][myX]){
             //System.out.println("mine");
             return;
         }
-        if (playing_board[myX][myY] != HIDDEN){
-            //System.out.println("hidden");
-            return;
-        }
-        if (solution[myX][myY] != 0 && !First_Tap_of_Game){
-            playing_board[myX][myY] = Integer.toString(solution[myX][myY]);
-            exploreList.add(new CoordPair(myX, myY));
+        if (playing_board[myY][myX] != HIDDEN || playing_board[myY][myX] == FLAG){
+            //System.out.println("not hidden");
             return;
         }
 
+        if (solution[myY][myX] > 0){
+            //System.out.println("number");
+            playing_board[myY][myX]= Integer.toString(solution[myX][myY]);
+            return;
+        }
         //Recursive Case - populate playingboard
         else{
-            playing_board[myX][myY] = EMPTY;
-            exploreList.add(new CoordPair(myX, myY));
+            playing_board[myY][myX] = EMPTY;
+            //System.out.println("RECURSE");
             tapCell2(myX+1, myY);
             tapCell2(myX-1, myY);
             tapCell2(myX, myY+1);
@@ -253,6 +226,8 @@ public class Game {
         int myX = x-1;
         int myY = y-1;
         if (inbounds(myX,myY)){
+            //System.out.println(myX + " " + myY);
+            playing_board[myY][myX] = FLAG;
             flagList.add(new CoordPair(myX, myY));
         }
         updateGame();
@@ -262,16 +237,16 @@ public class Game {
         int myY = y-1;
         if(inbounds(myX, myY)){
             CoordPair temp = new CoordPair(myX,myY);
-            for(CoordPair f : flagList){
-                if(temp.equals(f)){
-                    System.out.println("FOUND");
-                    flagList.remove(f);
-                    break;
+            for(CoordPair c: flagList){
+                if(temp.equals(c)){
+                    flagList.remove(c);
+                    playing_board[myY][myX] = HIDDEN;
                 }
             }
         }
-
+        updateGame();
     }
+
 
 
     /**
@@ -281,16 +256,17 @@ public class Game {
      */
     private void updateGame(){
         //1) confirmation count, if X out of X Mine CoordPairs are flagged then the game is won
-        int confirm = 0;
-        for(CoordPair m : mineList){
+        int counter = 0;
+        for(CoordPair m: mineList){
             for(CoordPair f: flagList){
-                if(m.equals(f)){
-                    confirm++;
-                }
-
+                if(f.equals(m)) counter++;
             }
         }
-        if (confirm == mineList.size() || GAME_OVER) System.out.println("GAME OVER! You win!");
+
+
+        if (counter == mineList.size() && flagList.size() == mineList.size()||
+                (mineList.containsAll(hiddenList) && mineList.size() == hiddenList.size())
+                || GAME_OVER) System.out.println("GAME OVER! You win!");
 
     }
 
@@ -331,7 +307,20 @@ public class Game {
             System.out.println();
         }
     }
+    public void printLists(){
+        System.out.print("Mines:");
+        for(CoordPair c: mineList) System.out.print("(" + c.toString() + "), ");
+        System.out.print("Flags:");
+        for(CoordPair c: flagList) System.out.print("(" + c.toString() + "), ");
+    }
 
+    public void setToggle(boolean toggle){
+        Flag_Mode = toggle;
+    }
+
+    public boolean getToggle(){
+        return Flag_Mode;
+    }
 
     /**
      * getter for Length
@@ -376,6 +365,9 @@ public class Game {
     public String[][] getPlaying_board(){
         return this.playing_board;
     }
+    public int[][] getSolution(){
+        return this.solution;
+    }
 
 
     public class CoordPair {
@@ -389,8 +381,14 @@ public class Game {
         public int getY(){
             return y;
         }
-        public boolean equals(CoordPair cp){
-            return (this.getX() == cp.getX() && this.getY() == cp.getY());
+
+        @Override
+        public boolean equals(Object cp){
+            CoordPair cp2 = (CoordPair) cp;
+            return (this.getX() == cp2.getX() && this.getY() == cp2.getY());
+        }
+        public String toString(){
+            return getX() + ", " + getY();
         }
     }
 
@@ -413,17 +411,19 @@ public class Game {
 
         Game game = new Game(m, s, 3, 3, 0.5);
         game.printBoard();
-        game.printPlayingBoard();
+        //game.printPlayingBoard();
         game.flagCell(1, 1);
-        game.removeFlag(1, 1);
+        //game.flagCell(2,2);
+        //game.removeFlag(1, 1);
         game.flagCell(1, 3);
-        game.tapCell(2, 3);
-        game.printPlayingBoard();
-        //game.tapCell(1, 1);
-        game.printPlayingBoard();
+        game.printLists();
 
-        //nuGame.tapCell(9, 9);
-        //nuGame.printPlayingBoard();
+        game.printPlayingBoard();
+        game.tapCell(3,2);
+        game.printPlayingBoard();
+        //game.tapCell(2, 3);
+        //game.printPlayingBoard();
+
 
     }
 
