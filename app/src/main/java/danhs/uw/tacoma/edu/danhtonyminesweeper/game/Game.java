@@ -1,6 +1,5 @@
 package danhs.uw.tacoma.edu.danhtonyminesweeper.game;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -14,10 +13,10 @@ public class Game {
     private int[][] solution;
 
     private String[][] playing_board;
-    public final String HIDDEN = "X";
-    public final String MINE = "*";
-    public final String EMPTY = ".";
-    public final String FLAG = "O";
+    public static final String HIDDEN = "X";
+    public static final String MINE = "*";
+    public static final String EMPTY = ".";
+    public static final String FLAG = "@";
 
     private Set<CoordPair> mineList = new HashSet<>();//list of mine coordinates
     private Set<CoordPair> flagList = new HashSet<>();//list of flag coordinates
@@ -25,7 +24,8 @@ public class Game {
 
     private boolean Flag_Mode = false;
     private boolean GAME_OVER = false;
-    boolean WIN = false;
+    public boolean WIN = false;
+    public boolean LOSE = false;
 
     /**
      * Public Constructor to create a new Minesweeper Game
@@ -59,7 +59,10 @@ public class Game {
 
         playing_board = new String[length][width];
         for (int i = 0; i < length; i++){
-            for (int j = 0; j < width; j++) playing_board[i][j] = HIDDEN;
+            for (int j = 0; j < width; j++){
+                hiddenList.add(new CoordPair(j, i));
+                playing_board[i][j] = HIDDEN;
+            }
         }
 
     }
@@ -77,6 +80,7 @@ public class Game {
         makeMineList();
         GAME_OVER = false;
         WIN = false;
+        LOSE = false;
     }
 
     /**
@@ -87,6 +91,7 @@ public class Game {
         playing_board = new String[length][width];
         for (int i = 0; i < length; i++){
             for (int j = 0; j < width; j++){
+                hiddenList.add(new CoordPair(j, i));
                 playing_board[i][j] = HIDDEN;
                 mine_map[i][j] = (Math.random() < probability);
             }
@@ -159,12 +164,19 @@ public class Game {
 
         if (mine_map[myY][myX]){
             playing_board[myY][myX] = MINE;
-            WIN = true;
+            WIN = false;
+            LOSE = true;
             GAME_OVER = true;
             //System.out.println("YOU HIT A MINE");
         }
         else if(playing_board[myY][myX] != FLAG){
             tapCell2(x, y);
+            CoordPair temp = new CoordPair(myX,myY);
+            /*for(CoordPair c: hiddenList){
+                if(temp.equals(c)){
+                    hiddenList.remove(c);
+                }
+            }*/
         }
         updateGame();
 
@@ -175,7 +187,7 @@ public class Game {
      *
      * CASE 1: if the coordinates of the cell are not in bounds end recursion,
      * CASE 2: if the cell is a mine end the recursion,
-     * CASE 3: if the cell is already revealed end the recursion,
+     * CASE 3: if the cell is already revealed or flagged end the recursion,
      * CASE 4: if the cell is empty but has mines adjacent to it, mark it on the playing board and end recursion
      *
      * Recursive Case: mark cell on playing board as revealed and do recursion on adjacent cells
@@ -188,21 +200,10 @@ public class Game {
         int myY = y-1;
         //System.out.println(myX + "," + myY);
         //Base Cases
-        if (!inbounds(myX,myY)){
-            //System.out.println("inbounds");
-            return;
-        }
-        if (mine_map[myY][myX]){
-            //System.out.println("mine");
-            return;
-        }
-        if (playing_board[myY][myX] != HIDDEN || playing_board[myY][myX] == FLAG){
-            //System.out.println("not hidden");
-            return;
-        }
-
+        if (!inbounds(myX,myY)) return;
+        if (mine_map[myY][myX]) return;
+        if (playing_board[myY][myX] != HIDDEN || playing_board[myY][myX] == FLAG) return;
         if (solution[myY][myX] > 0){
-            //System.out.println("number");
             playing_board[myY][myX]= Integer.toString(solution[myX][myY]);
             return;
         }
@@ -222,6 +223,11 @@ public class Game {
         }
     }
 
+    /**
+     * Flags the cell
+     * @param x the x coordinate of the cell
+     * @param y the y coordinate of the cell
+     */
     public void flagCell(int x, int y){
         int myX = x-1;
         int myY = y-1;
@@ -232,6 +238,27 @@ public class Game {
         }
         updateGame();
     }
+
+    /**
+     * Checks if the Cell has been flagged or not
+     * @param x the x coordinate of the cell
+     * @param y the y coordinate of the cell
+     * @return returns TRUE if cell is flagged, else FALSE
+     */
+    public boolean isFlagged(int x, int y){
+        int myX = x-1;
+        int myY = y-1;
+        if (inbounds(myX,myY)){
+            return playing_board[myY][myX] == FLAG;
+        }
+        else return false;
+    }
+
+    /**
+     * Removes the flag from the cell if it exists
+     * @param x the x coordinate of the cell
+     * @param y the y coordinate of the cell
+     */
     public void removeFlag(int x, int y){
         int myX = x-1;
         int myY = y-1;
@@ -257,17 +284,38 @@ public class Game {
     private void updateGame(){
         //1) confirmation count, if X out of X Mine CoordPairs are flagged then the game is won
         int counter = 0;
+        int counter2 = 0;
         for(CoordPair m: mineList){
             for(CoordPair f: flagList){
                 if(f.equals(m)) counter++;
             }
+            for(CoordPair h: hiddenList){
+                if(h.equals(m)) counter2++;
+            }
+        }
+        if (counter == mineList.size() && flagList.size() == mineList.size()||
+                (counter2 == mineList.size() && mineList.size() == hiddenList.size())){
+            WIN = true;
+            LOSE = false;
+            System.out.println("GAME OVER!");
         }
 
+    }
 
-        if (counter == mineList.size() && flagList.size() == mineList.size()||
-                (mineList.containsAll(hiddenList) && mineList.size() == hiddenList.size())
-                || GAME_OVER) System.out.println("GAME OVER! You win!");
+    /**
+     * Boolean to return Game Results
+     * @return TRUE if player has won the game, FALSE if player has lost
+     */
+    public boolean GameResults(){
+        return WIN && !LOSE;
+    }
 
+    /**
+     * Boolean to check if the current game is still be played.
+     * @return TRUE if the game is still being played, else FALSE if the Game is Over.
+     */
+    public boolean isStillPlaying(){
+        return !GAME_OVER;
     }
 
 

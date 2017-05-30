@@ -1,6 +1,7 @@
 package danhs.uw.tacoma.edu.danhtonyminesweeper.game;
 
 import android.content.Context;
+import android.media.Image;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,8 +11,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,8 +33,22 @@ public class MinesweeperActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_minesweeper);
 
+
+
         mGame = new Game(10,10,0.1);
         mGame.NewGame();
+
+        ToggleButton toggle = (ToggleButton) findViewById(R.id.Flag_Toggle);
+        toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                   mGame.setToggle(true);
+                } else {
+                   mGame.setToggle(false);
+                }
+            }
+        });
+
 
 
         // Get the widgets reference from XML layout
@@ -52,7 +70,13 @@ public class MinesweeperActivity extends AppCompatActivity {
                 xPos++;
 
                 Log.d("Cell", position+1 + "("+ xPos + ", " +yPos + "): " + mGame.getSolution()[yPos-1][xPos-1]);
-                mGame.tapCell(xPos, yPos);
+                if(mGame.getToggle()){
+                    if(mGame.isFlagged(xPos,yPos)){
+                        mGame.removeFlag(xPos,yPos);
+                    }
+                    else mGame.flagCell(xPos,yPos);
+                }
+                else mGame.tapCell(xPos, yPos);
                 GameBoardAdapter.clear();
                 GameBoardAdapter.addAll(AdaptPlayingBoard());
                 GameBoardAdapter.notifyDataSetChanged();
@@ -74,6 +98,32 @@ public class MinesweeperActivity extends AppCompatActivity {
             singleDArray.addAll(Arrays.asList(array));
         }
         return singleDArray;
+    }
+    public List<ImageView> AdaptPlayingBoard2(){
+        String[][]temp = mGame.getPlaying_board();
+        ArrayList<String> singleDArray = new ArrayList<String>();
+        ArrayList<ImageView> ImgArray = new ArrayList<ImageView>();
+
+        for (String[] array :temp) {
+            singleDArray.addAll(Arrays.asList(array));
+        }
+        for(String cell: singleDArray){
+            ImageView tempIV = new ImageView(this);
+            if(cell.equals(Game.HIDDEN)){
+                //tempTV.s
+            }
+            if(cell.equals(Game.EMPTY)){
+                //
+            }
+            if(cell.equals(Game.MINE)){
+                //
+            }
+            if(cell.equals(Game.FLAG)){
+                //
+            }
+            ImgArray.add(tempIV);
+        }
+        return ImgArray;
     }
 
 }

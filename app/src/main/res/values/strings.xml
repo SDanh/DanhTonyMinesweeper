@@ -18,4 +18,7 @@
     <string name="action_logout">Log Out</string>
 
     <string name="leaderboard_text">Leaderboard</string>
+
+    <string name="Flag_Toggle_On">Flag</string>
+    <string name="Flag_Toggle_Off">No Flag</string>
 </resources>
