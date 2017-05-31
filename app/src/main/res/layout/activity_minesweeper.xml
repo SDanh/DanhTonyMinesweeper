@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rl"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    android:background="#b0c1aa"
+    android:orientation="vertical"
+    tools:context="danhs.uw.tacoma.edu.danhtonyminesweeper.game.MinesweeperActivity">
+
+    <ToggleButton
+        android:id="@+id/Flag_Toggle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textOn="@string/Flag_Toggle_On"
+        android:textOff="@string/Flag_Toggle_Off"/>
+    <TextView
+        android:id="@+id/tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#f7f7f3"
+        android:layout_marginBottom="10dp"
+        android:padding="10dp"
+        android:fontFamily="sans-serif-condensed"
+        />
+
+    <GridView
+        android:id="@+id/gv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv"
+        android:background="#fff"
+        >
+    </GridView>
+
+</LinearLayout>
+
