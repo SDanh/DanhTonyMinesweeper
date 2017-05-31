@@ -1,5 +1,6 @@
 package danhs.uw.tacoma.edu.danhtonyminesweeper.game;
 
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,11 +10,13 @@ import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.GridView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ThreadFactory;
 
 import danhs.uw.tacoma.edu.danhtonyminesweeper.R;
 
@@ -24,7 +27,6 @@ import danhs.uw.tacoma.edu.danhtonyminesweeper.R;
 public class MinesweeperActivity extends AppCompatActivity {
 
     Game mGame;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +50,7 @@ public class MinesweeperActivity extends AppCompatActivity {
         });
 
         // Get the widgets reference from XML layout
-        GridView gv = (GridView) findViewById(R.id.gv);
+        final GridView gv = (GridView) findViewById(R.id.gv);
         gv.setNumColumns(mGame.getWidth());
 
         final TextView tv = (TextView) findViewById(R.id.tv);
@@ -83,8 +85,11 @@ public class MinesweeperActivity extends AppCompatActivity {
                 String selectedItem = parent.getItemAtPosition(position).toString();
 
                 // Display the selected/clicked item text and position on TextView
-                tv.setText("GridView item clicked : " +selectedItem
-                        + "\nAt index position : " + position + " (" + xPos + "," + yPos + ")");
+                tv.setText("GridView item clicked : " +selectedItem  + "\nAt index position : " + position + " (" + xPos + "," + yPos + ")");
+                if(selectedItem.equals(Game.MINE)){
+                    Toast.makeText(MinesweeperActivity.this, R.string.Game_Over_Text, Toast.LENGTH_LONG).show();
+                    finish();
+                }
             }
         });
 
