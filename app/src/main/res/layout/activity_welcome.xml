@@ -7,13 +7,29 @@
     android:orientation="vertical"
     tools:context="danhs.uw.tacoma.edu.danhtonyminesweeper.WelcomeActivity">
 
+    <TextView
+        android:id="@+id/welcome_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_margin="@dimen/text_margin"
+        android:textSize="24sp"/>
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/leaderboard_button"
         android:layout_gravity="center"
         android:text="@string/leaderboard_text"
-        android:onClick="openLeaderBoards"/>
+        android:onClick="openLeaderboard"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/achievement_button"
+        android:layout_gravity="center"
+        android:text="@string/achievement_text"
+        android:onClick="openAchievement"/>
 
 
 </LinearLayout>
