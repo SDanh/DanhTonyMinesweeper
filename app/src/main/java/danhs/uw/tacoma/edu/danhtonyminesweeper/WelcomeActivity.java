@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import danhs.uw.tacoma.edu.danhtonyminesweeper.achievement.AchievementActivity;
 import danhs.uw.tacoma.edu.danhtonyminesweeper.authenticate.SignInActivity;
+import danhs.uw.tacoma.edu.danhtonyminesweeper.game.MinesweeperActivity;
 import danhs.uw.tacoma.edu.danhtonyminesweeper.leaderboard.LeaderboardActivity;
 
 /**
@@ -73,6 +74,17 @@ public class WelcomeActivity extends AppCompatActivity {
         String s = "Welcome\n" +
                 mSharedPreferences.getString(getString(R.string.username), "");
         welcomeTextView.setText(s);
+    }
+
+    /**
+     * Listener for the Minesweeper button.
+     * When clicked starts a new game.
+     * @param view The view.
+     */
+    public void openPlay(View view){
+        Intent i = new Intent(this, MinesweeperActivity.class);
+        startActivity(i);
+        //finish();
     }
 
     /**

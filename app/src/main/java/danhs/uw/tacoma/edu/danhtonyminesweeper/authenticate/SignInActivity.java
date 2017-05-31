@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -19,9 +18,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.concurrent.TimeUnit;
 
-import danhs.uw.tacoma.edu.danhtonyminesweeper.MainActivity;
 import danhs.uw.tacoma.edu.danhtonyminesweeper.R;
 import danhs.uw.tacoma.edu.danhtonyminesweeper.WelcomeActivity;
 

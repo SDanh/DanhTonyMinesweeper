@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="danhs.uw.tacoma.edu.danhtonyminesweeper.MainActivity">
+    tools:context="danhs.uw.tacoma.edu.danhtonyminesweeper.WelcomeActivity">
     <item
         android:id="@+id/action_logout"
         android:orderInCategory="100"

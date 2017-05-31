@@ -36,8 +36,9 @@
     <string name="lost">Lost</string>
     <string name="achievement_text">Achievements</string>
 
-
+    <string name="play_text">Play</string>
     <string name="Flag_Toggle_On">Flag</string>
     <string name="Flag_Toggle_Off">No Flag</string>
+    <string name="Game_Over_Text">YOU HIT A MINE! GAME OVER</string>
 
 </resources>
