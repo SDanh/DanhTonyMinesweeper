@@ -14,11 +14,19 @@ import danhs.uw.tacoma.edu.danhtonyminesweeper.R;
 import danhs.uw.tacoma.edu.danhtonyminesweeper.data.Achievements;
 import danhs.uw.tacoma.edu.danhtonyminesweeper.achievement.AchievementFragment.AchievementInteractionListener;
 
+/**
+ * RecyclerViewAdapter for achievements.
+ */
 public class AchievementRecyclerViewAdapter extends RecyclerView.Adapter<AchievementRecyclerViewAdapter.ViewHolder> {
 
     private final List<Achievements> mValues;
     private final AchievementInteractionListener mListener;
 
+    /**
+     * Constructor
+     * @param items List of achievements
+     * @param listener A listener
+     */
     public AchievementRecyclerViewAdapter(List<Achievements> items, AchievementInteractionListener listener) {
         mValues = items;
         mListener = listener;

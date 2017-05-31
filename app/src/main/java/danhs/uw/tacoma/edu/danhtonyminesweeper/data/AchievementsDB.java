@@ -12,6 +12,9 @@ import java.util.List;
 
 import danhs.uw.tacoma.edu.danhtonyminesweeper.R;
 
+/**
+ * A SQLite database of achievements.
+ */
 public class AchievementsDB {
     public static final int DB_VERSION = 1;
     public static final String DB_NAME = "Achievements.db";
@@ -21,7 +24,10 @@ public class AchievementsDB {
     private SQLiteDatabase mSQLiteDatabase;
 
 
-
+    /**
+     * Constructor
+     * @param context The context
+     */
     public AchievementsDB(Context context) {
         mAchievementsDBHelper = new AchievementsDBHelper(
                 context, DB_NAME, null, DB_VERSION);
@@ -32,10 +38,10 @@ public class AchievementsDB {
 
     /**
      * Inserts the course into the local sqlite table. Returns true if successful, false otherwise.
-     * @param name
-     * @param description
-     * @param condition
-     * @return true or false
+     * @param name The name of the achievement.
+     * @param description The description of the achievement.
+     * @param condition The condition of the achievement.
+     * @return true if SQLite insertion was successful, false otherwise.
      */
     public boolean insertAchievements(String name, String description, String condition) {
         ContentValues contentValues = new ContentValues();
@@ -56,6 +62,9 @@ public class AchievementsDB {
     }
 
 
+    /**
+     * Closes the database.
+     */
     public void closeDB() {
         mSQLiteDatabase.close();
     }
@@ -63,7 +72,7 @@ public class AchievementsDB {
 
     /**
      * Returns the list of courses from the local Course table.
-     * @return list
+     * @return A list of achievements.
      */
     public List<Achievements> getAchievements() {
 
@@ -95,15 +104,22 @@ public class AchievementsDB {
     }
 
 
-
-
-
+    /**
+     * A helper class.
+     */
     class AchievementsDBHelper extends SQLiteOpenHelper {
 
         private final String CREATE_ACHIEVEMENTS_SQL;
 
         private final String DROP_ACHIEVEMENTS_SQL;
 
+        /**
+         * constructor
+         * @param context
+         * @param name
+         * @param factory
+         * @param version
+         */
         public AchievementsDBHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
             super(context, name, factory, version);
             CREATE_ACHIEVEMENTS_SQL = context.getString(R.string.CREATE_ACHIEVEMENTS_SQL);

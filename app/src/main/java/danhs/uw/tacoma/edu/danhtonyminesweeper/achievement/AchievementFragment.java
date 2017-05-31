@@ -31,6 +31,9 @@ import danhs.uw.tacoma.edu.danhtonyminesweeper.data.AchievementsDB;
 import danhs.uw.tacoma.edu.danhtonyminesweeper.data.Stats;
 import danhs.uw.tacoma.edu.danhtonyminesweeper.data.StatsDB;
 
+/**
+ * Fragment for Achievements
+ */
 public class AchievementFragment extends Fragment {
 
     private static final String TAG = "AchievementFragment";
@@ -49,9 +52,13 @@ public class AchievementFragment extends Fragment {
     private SharedPreferences mSharedPreferences;
 
 
+    /**
+     * Constructor
+     */
     public AchievementFragment() {
         // Required empty public constructor
     }
+
 
 
     @Override
@@ -71,6 +78,7 @@ public class AchievementFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_achievement, container, false);
     }
 */
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -110,8 +118,10 @@ public class AchievementFragment extends Fragment {
             // filter out achievements not earned
             if (mAchievementsList == null) {
                 List<Achievements> tempAchievementsList = mAchievementsDB.getAchievements();
-                //mAchievementsList = getAchievementsEarned(tempAchievementsList);
+                mAchievementsList = new ArrayList<>();
                 mAchievementsList = tempAchievementsList;
+                // this method will be used when it works.
+                //achievementsEarned(tempAchievementsList, mAchievementsList);
             }
             mRecyclerView.setAdapter(new AchievementRecyclerViewAdapter(mAchievementsList, mListener));
         }
@@ -189,53 +199,78 @@ public class AchievementFragment extends Fragment {
 
 
     /**
-     * Gets the achievements user has actually earned from a list of all achievements
-     * @param fullAchievementsList A list of all achievements
-     * @return A list of achievements actually earned.
+     * Gets the achievements user has actually earned from a list of all achievements.
+     * @param fullAchievementsList A list of all achievements.
+     * @param fillAchievementsList The list to put earned achievements.
      */
-    public List<Achievements> getAchievementsEarned(List<Achievements> fullAchievementsList) {
+    public void achievementsEarned(List<Achievements> fullAchievementsList, List<Achievements> fillAchievementsList) {
         // filter out achievements not earned
-        Log.d(TAG, "getter entered");
-        ArrayList<Achievements> achievementsList = new ArrayList<>();
+        //Log.d(TAG, "getter entered");
+        //Log.d(TAG, "username " + mSharedPreferences.getString(getString(R.string.username), null));
+        //ArrayList<Achievements> achievementsList = new ArrayList<>();
+        List<Stats> statsList = mStatsDB.getStats();
+        //Log.d(TAG, "stats " + statsList.toString());
+        Stats account = null;
         for(int i = 0; i < fullAchievementsList.size(); i++) {
             Achievements achievements = fullAchievementsList.get(i);
             Map<String, Integer> condition = achievements.getConditionMap();
 
-            List<Stats> statsList = mStatsDB.getStats();
-            Stats account = null;
+
             // get stats for the account currently logged in.
+            // only one account should match and set account.
+
+
             for(Stats stats: statsList) {
-                if(stats.getUsername().equals(mSharedPreferences.getString(getString(R.string.username), null))) {
+                Log.d(TAG, "stats.getUsername() " + stats.getUsername());
+                //if(stats.getUsername().equals(mSharedPreferences.getString(getString(R.string.username), null))) {
+                if(stats.getUsername().equals("example@google.com")) {
+
                     account = stats;
                 }
             }
+
             boolean conditionMet = false;
+            // if account doesn't exist don't load any achievements
+            //Log.d(TAG, "i got here " + i + account);
+
             if(account != null) {
+                //Log.d(TAG, "account " + account.toString());
                 conditionMet = true;
                 // go through all the conditions
+                //Log.d(TAG, "keyset " + condition);
                 for (String key : condition.keySet()) {
                     // database uses key played
                     // sqlite uses key games
+                    String mySqliteKey = key;
                     if (key.equals("played")) {
-                        key = "games";
+                        mySqliteKey = "games";
+                        Log.d(TAG, "keychange " + key);
                     }
+                    //Log.d(TAG, "key " + key);
+                    //Log.d(TAG, "condition key: " + account.get(key) + ", " + condition.get(key));
                     // condition <= account means condition met
-                    conditionMet &= account.get(key).compareTo(condition.get(key)) >= 0;
+                    conditionMet &= account.get(mySqliteKey)
+                                    .compareTo(condition.get(key)) >= 0;
                 }
             }
 
             // if condition is met add to list of achievements
             if(conditionMet) {
-                achievementsList.add(achievements);
+                fillAchievementsList.add(achievements);
             }
         }
-        Log.d(TAG, achievementsList.toString());
-        return achievementsList;
+        if(fillAchievementsList.size() == 0) {
+            fillAchievementsList.add(new Achievements("You have not earned any achievements", "", "{}"));
+        }
+
+        //Log.d(TAG, "fullAchievementsList " + fullAchievementsList.toString());
+        //Log.d(TAG, "fillAchievementsList " + fillAchievementsList.toString());
     }
 
 
-
-
+    /**
+     * Async task to download achievements.
+     */
     private class DownloadAchievementTask extends AsyncTask<String, Void, String> {
 
         private AchievementsDB mAchievementsDB;
@@ -271,6 +306,9 @@ public class AchievementFragment extends Fragment {
         }
 
 
+
+
+
         @Override
         protected void onPostExecute(String result) {
             // Something wrong with the network or the URL.
@@ -283,13 +321,13 @@ public class AchievementFragment extends Fragment {
             Log.d(TAG,result);
             List<Achievements> tempAchievementsList = new ArrayList<Achievements>();
             String statusresult = Achievements.parseAchievementsJSON(result, tempAchievementsList);
+            mAchievementsList = new ArrayList<>();
+            mStatsDB = new StatsDB(getActivity());
             // filter out achievements not earned
-            //mAchievementsList = getAchievementsEarned(tempAchievementsList);
+
             mAchievementsList = tempAchievementsList;
-
-
-
-
+            // this method will be used when it works.
+            //achievementsEarned(tempAchievementsList, mAchievementsList);
 
 
 

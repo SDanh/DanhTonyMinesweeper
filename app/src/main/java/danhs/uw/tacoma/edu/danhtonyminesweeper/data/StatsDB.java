@@ -12,6 +12,9 @@ import java.util.List;
 
 import danhs.uw.tacoma.edu.danhtonyminesweeper.R;
 
+/**
+ * A database for game statistics.
+ */
 public class StatsDB {
     public static final int DB_VERSION = 1;
     public static final String DB_NAME = "Stats.db";
@@ -21,7 +24,10 @@ public class StatsDB {
     private SQLiteDatabase mSQLiteDatabase;
 
 
-
+    /**
+     * Constructor
+     * @param context The context.
+     */
     public StatsDB(Context context) {
         mStatsDBHelper = new StatsDBHelper(
                 context, DB_NAME, null, DB_VERSION);
@@ -32,11 +38,11 @@ public class StatsDB {
 
     /**
      * Inserts the course into the local sqlite table. Returns true if successful, false otherwise.
-     * @param username
-     * @param games
-     * @param won
-     * @param lost
-     * @return true or false
+     * @param username The username for the account.
+     * @param games The number of games played.
+     * @param won The number of games won.
+     * @param lost The number of games lost.
+     * @return true if insertion into SQLite database was successful, false otherwise.
      */
     public boolean insertStats(String username, String games, String won, String lost) {
         ContentValues contentValues = new ContentValues();
@@ -58,14 +64,17 @@ public class StatsDB {
     }
 
 
+    /**
+     * Closes the database.
+     */
     public void closeDB() {
         mSQLiteDatabase.close();
     }
 
 
     /**
-     * Returns the list of courses from the local Course table.
-     * @return list
+     * Returns the list of statistics from the local database.
+     * @return A list of statistics.
      */
     public List<Stats> getStats() {
 
@@ -98,15 +107,22 @@ public class StatsDB {
     }
 
 
-
-
-
+    /**
+     * Helper class
+     */
     class StatsDBHelper extends SQLiteOpenHelper {
 
         private final String CREATE_STATS_SQL;
 
         private final String DROP_STATS_SQL;
 
+        /**
+         * Constructor
+         * @param context
+         * @param name
+         * @param factory
+         * @param version
+         */
         public StatsDBHelper(Context context, String name, SQLiteDatabase.CursorFactory factory, int version) {
             super(context, name, factory, version);
             CREATE_STATS_SQL = context.getString(R.string.CREATE_STATS_SQL);

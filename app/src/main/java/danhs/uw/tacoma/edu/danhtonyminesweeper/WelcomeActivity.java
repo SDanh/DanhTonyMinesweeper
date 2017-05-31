@@ -14,6 +14,9 @@ import danhs.uw.tacoma.edu.danhtonyminesweeper.achievement.AchievementActivity;
 import danhs.uw.tacoma.edu.danhtonyminesweeper.authenticate.SignInActivity;
 import danhs.uw.tacoma.edu.danhtonyminesweeper.leaderboard.LeaderboardActivity;
 
+/**
+ * The starting point for the app.
+ */
 public class WelcomeActivity extends AppCompatActivity {
 
     private TextView welcomeTextView;
@@ -61,6 +64,9 @@ public class WelcomeActivity extends AppCompatActivity {
     }
 
 
+    /**
+     * Sets the textview on the screen.
+     */
     private void setWelcomeTextView() {
         mSharedPreferences = getSharedPreferences(getString(R.string.LOGIN_PREFS)
                 , Context.MODE_PRIVATE);
@@ -69,14 +75,21 @@ public class WelcomeActivity extends AppCompatActivity {
         welcomeTextView.setText(s);
     }
 
-    //opens leaderboard activity
+    /**
+     * Listener for the leaderboard button.
+     * @param view The view.
+     */
     public void openLeaderboard(View view){
         Intent i = new Intent(this, LeaderboardActivity.class);
         startActivity(i);
         //finish();
     }
 
-    //opens leaderboard activity
+
+    /**
+     * Listener for the Achievement button.
+     * @param view The view.
+     */
     public void openAchievement(View view){
         Intent i = new Intent(this, AchievementActivity.class);
         startActivity(i);

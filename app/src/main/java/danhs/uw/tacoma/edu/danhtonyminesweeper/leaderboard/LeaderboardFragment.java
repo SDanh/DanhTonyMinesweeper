@@ -27,6 +27,9 @@ import danhs.uw.tacoma.edu.danhtonyminesweeper.R;
 import danhs.uw.tacoma.edu.danhtonyminesweeper.data.Stats;
 import danhs.uw.tacoma.edu.danhtonyminesweeper.data.StatsDB;
 
+/**
+ * A fragment for the leaderboard
+ */
 public class LeaderboardFragment extends Fragment {
 
     private static final String TAG = "LeaderboardFragment";
@@ -43,15 +46,9 @@ public class LeaderboardFragment extends Fragment {
     private List<Stats> mStatsList;
 
 
-
-
-
-
-
-
-
-
-
+    /**
+     * Constructor
+     */
     public LeaderboardFragment() {
         // Required empty public constructor
     }
@@ -185,11 +182,9 @@ public class LeaderboardFragment extends Fragment {
     }
 
 
-
-
-
-
-
+    /**
+     * An AsyncTask to get the leaderboard from the server.
+     */
     private class DownloadLeaderboardTask extends AsyncTask<String, Void, String> {
 
         private StatsDB mStatsDB;
@@ -274,28 +269,5 @@ public class LeaderboardFragment extends Fragment {
 
 
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }

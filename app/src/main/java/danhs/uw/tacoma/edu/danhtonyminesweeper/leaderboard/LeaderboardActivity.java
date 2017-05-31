@@ -12,6 +12,9 @@ import danhs.uw.tacoma.edu.danhtonyminesweeper.R;
 import danhs.uw.tacoma.edu.danhtonyminesweeper.data.Stats;
 import danhs.uw.tacoma.edu.danhtonyminesweeper.authenticate.SignInActivity;
 
+/**
+ * An activity for the Leaderboard
+ */
 public class LeaderboardActivity extends AppCompatActivity implements LeaderboardFragment.LeaderboardInteractionListener {
 
 
@@ -69,6 +72,10 @@ public class LeaderboardActivity extends AppCompatActivity implements Leaderboar
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Implements the LeaderboardInteractionListener
+     * @param stats A Stats object.
+     */
     public void leaderboardInteraction(Stats stats) {
 
     }

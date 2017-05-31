@@ -15,11 +15,19 @@ import danhs.uw.tacoma.edu.danhtonyminesweeper.R;
 import danhs.uw.tacoma.edu.danhtonyminesweeper.data.Stats;
 import danhs.uw.tacoma.edu.danhtonyminesweeper.leaderboard.LeaderboardFragment.LeaderboardInteractionListener;
 
+/**
+ * A RecyclerViewAdapter for the leaderboard.
+ */
 public class LeaderboardRecyclerViewAdapter extends RecyclerView.Adapter<LeaderboardRecyclerViewAdapter.ViewHolder> {
 
     private final List<Stats> mValues;
     private final LeaderboardInteractionListener mListener;
 
+    /**
+     * Constructor
+     * @param items A list of Stats.
+     * @param listener A listener.
+     */
     public LeaderboardRecyclerViewAdapter(List<Stats> items, LeaderboardInteractionListener listener) {
         mValues = items;
         mListener = listener;

@@ -12,6 +12,9 @@ import danhs.uw.tacoma.edu.danhtonyminesweeper.R;
 import danhs.uw.tacoma.edu.danhtonyminesweeper.data.Achievements;
 import danhs.uw.tacoma.edu.danhtonyminesweeper.authenticate.SignInActivity;
 
+/**
+ * An activity for Achievements.
+ */
 public class AchievementActivity extends AppCompatActivity implements AchievementFragment.AchievementInteractionListener {
 
 
@@ -69,6 +72,10 @@ public class AchievementActivity extends AppCompatActivity implements Achievemen
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * Implements the achievementInteractionListener interface.
+     * @param achievements An Achievements object.
+     */
     public void achievementInteraction(Achievements achievements) {
 
     }
