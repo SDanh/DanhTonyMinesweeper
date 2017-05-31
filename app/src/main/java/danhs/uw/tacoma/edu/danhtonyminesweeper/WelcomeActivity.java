@@ -8,16 +8,25 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
+import danhs.uw.tacoma.edu.danhtonyminesweeper.achievement.AchievementActivity;
 import danhs.uw.tacoma.edu.danhtonyminesweeper.authenticate.SignInActivity;
-import danhs.uw.tacoma.edu.danhtonyminesweeper.leaderboard.LeaderBoardActivity;
+import danhs.uw.tacoma.edu.danhtonyminesweeper.leaderboard.LeaderboardActivity;
 
+/**
+ * The starting point for the app.
+ */
 public class WelcomeActivity extends AppCompatActivity {
+
+    private TextView welcomeTextView;
+    private SharedPreferences mSharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
+        welcomeTextView = (TextView) findViewById(R.id.welcome_text_view);
     }
 
     //attaches main menu to main activity
@@ -48,10 +57,42 @@ public class WelcomeActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    //opens leaderboard activity
-    public void openLeaderBoards(View view){
-        Intent i = new Intent(this, LeaderBoardActivity.class);
+    @Override
+    public void onResume() {
+        super.onResume();
+        setWelcomeTextView();
+    }
+
+
+    /**
+     * Sets the textview on the screen.
+     */
+    private void setWelcomeTextView() {
+        mSharedPreferences = getSharedPreferences(getString(R.string.LOGIN_PREFS)
+                , Context.MODE_PRIVATE);
+        String s = "Welcome\n" +
+                mSharedPreferences.getString(getString(R.string.username), "");
+        welcomeTextView.setText(s);
+    }
+
+    /**
+     * Listener for the leaderboard button.
+     * @param view The view.
+     */
+    public void openLeaderboard(View view){
+        Intent i = new Intent(this, LeaderboardActivity.class);
         startActivity(i);
-        finish();
+        //finish();
+    }
+
+
+    /**
+     * Listener for the Achievement button.
+     * @param view The view.
+     */
+    public void openAchievement(View view){
+        Intent i = new Intent(this, AchievementActivity.class);
+        startActivity(i);
+        //finish();
     }
 }

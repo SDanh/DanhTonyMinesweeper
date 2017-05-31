@@ -9,19 +9,37 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import danhs.uw.tacoma.edu.danhtonyminesweeper.R;
+import danhs.uw.tacoma.edu.danhtonyminesweeper.data.Stats;
 import danhs.uw.tacoma.edu.danhtonyminesweeper.authenticate.SignInActivity;
 
-public class LeaderBoardActivity extends AppCompatActivity {
+/**
+ * An activity for the Leaderboard
+ */
+public class LeaderboardActivity extends AppCompatActivity implements LeaderboardFragment.LeaderboardInteractionListener {
+
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_leader_board);
+        setContentView(R.layout.activity_leaderboard);
 
+
+
+        if (savedInstanceState == null || getSupportFragmentManager().findFragmentById(R.id.fragment_leaderboard_list) == null) {
+            LeaderboardFragment leaderboardFragment = new LeaderboardFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.leaderboard_fragment_container, leaderboardFragment)
+                    .commit();
+        }
+        /*
         LeaderboardFragment leaderboardFragment = new LeaderboardFragment();
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.leaderboard_fragment_container, leaderboardFragment)
                 .commit();
+        */
 
     }
 
@@ -32,6 +50,7 @@ public class LeaderBoardActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -52,4 +71,20 @@ public class LeaderBoardActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+    /**
+     * Implements the LeaderboardInteractionListener
+     * @param stats A Stats object.
+     */
+    public void leaderboardInteraction(Stats stats) {
+
+    }
+
+
+
+
+
+
+
+
 }

@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="danhs.uw.tacoma.edu.danhtonyminesweeper.leaderboard.LeaderBoardActivity"
-    android:id="@+id/leaderboard_fragment_container">
+    tools:context="danhs.uw.tacoma.edu.danhtonyminesweeper.achievement.AchievementActivity"
+    android:id="@+id/achievement_fragment_container">
+
 
 </android.support.constraint.ConstraintLayout>

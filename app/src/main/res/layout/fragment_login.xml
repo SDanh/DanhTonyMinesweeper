@@ -6,6 +6,8 @@
     android:orientation="vertical"
     tools:context="danhs.uw.tacoma.edu.danhtonyminesweeper.authenticate.LoginFragment">
 
+
+
     <EditText
         android:id="@+id/userid_edit"
         android:layout_width="match_parent"
