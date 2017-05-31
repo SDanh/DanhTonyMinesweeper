@@ -23,12 +23,14 @@
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".authenticate.SignInActivity">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".leaderboard.LeaderboardActivity"
             android:parentActivityName=".WelcomeActivity">
@@ -38,6 +40,9 @@
         </activity>
         <activity android:name=".WelcomeActivity" />
         <activity android:name=".achievement.AchievementActivity"></activity>
+
+        <activity android:name=".game.MinesweeperActivity"></activity>
+
     </application>
 
 </manifest>
