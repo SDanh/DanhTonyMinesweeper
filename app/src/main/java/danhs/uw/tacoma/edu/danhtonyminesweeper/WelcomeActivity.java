@@ -39,7 +39,7 @@ public class WelcomeActivity extends AppCompatActivity {
                     getSharedPreferences(getString(R.string.LOGIN_PREFS), Context.MODE_PRIVATE);
             sharedPreferences.edit().putBoolean(getString(R.string.LOGGEDIN), false)
                     .commit();
-            ///fslfjsdlkdsjfdlkjfldf
+ 
             Intent i = new Intent(this, SignInActivity.class);
             startActivity(i);
             finish();
